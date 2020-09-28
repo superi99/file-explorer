@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design for Bootstrap</title>
+ 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+<!--  &lt;!&ndash; Bootstrap core CSS &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="../static/css/bootstrap.min.css">-->
+<!--  &lt;!&ndash; Material Design Bootstrap &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="../static/css/mdb.min.css">-->
+<!--  &lt;!&ndash; Your custom styles (optional) &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="../static/css/style.css">-->
+
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+  <link th:href="@{/css/mdb.min.css}" rel="stylesheet" />
+  <link th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- Start your project here-->
+
+  <div id="source-tree"></div>
+
+  <!-- End your project here-->
+
+<!--  &lt;!&ndash; jQuery &ndash;&gt;-->
+<!--  <script type="text/javascript" src="js/jquery.min.js"></script>-->
+<!--  &lt;!&ndash; Bootstrap tooltips &ndash;&gt;-->
+<!--  <script type="text/javascript" src="js/popper.min.js"></script>-->
+<!--  &lt;!&ndash; Bootstrap core JavaScript &ndash;&gt;-->
+<!--  <script type="text/javascript" src="js/bootstrap.min.js"></script>-->
+<!--  &lt;!&ndash; MDB core JavaScript &ndash;&gt;-->
+<!--  <script type="text/javascript" src="js/mdb.min.js"></script>-->
+
+  <!-- Your custom scripts (optional) -->
+  <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/mdb.min.js}"></script>
+
+
+  <script type="text/javascript">
+    // Treeview Initialization
+    $(document).ready(function () {
+
+      // generate source tree
+      $('#source-tree').html('waiting for love...');
+      $.ajax({
+        type: "GET",
+        url: "/root",
+        data: { directory: 'D:/' },
+        dataType: 'json',
+        success: function (root) {
+          var sourceTree = '<div class="treeview-animated w-20 border mx-4 my-4"><h6 class="pt-3 pl-3">Folders</h6><hr><ul class="treeview-animated-list mb-3">' + renderTree(root) + '</ul></div>';
+
+          $('#source-tree').html(sourceTree);
+
+
+          // to make event for tree
+          $('.treeview-animated').mdbTreeview();
+        }
+      });
+
+    });
+
+    var renderTree = function (folder) {
+      var str = '<li class="treeview-animated-items"><a class="closed"><i class="fas fa-angle-right"></i><span><i class="far fa-folder-open ic-w mx-1"></i>' + folder.folderName + '</span></a><ul class="nested"> ';
+
+      // reander folder con
+      $.each(folder.children, function (index, value) {
+        str += renderTree(value);
+      });
+
+      //render file trong folder
+      $.each(folder.fileList, function (index, value) {
+        str += '<li><div class="treeview-animated-element" path="' + value.path + '"><i class="far fa-file ic-w mx-1"></i> ' + value.name + ' </li>';
+      });
+
+      return str + '</ul></li>';
+
+    }
+
+  </script>
+
+</body>
+
+</html>
